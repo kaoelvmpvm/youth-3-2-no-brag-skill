@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#26a57b" />
+  <title>青春練功－不炫耀｜分支情境遊戲</title>
+  <style>
+    :root{
+      --bg1:#fff7d9; --bg2:#e9fff4; --bg3:#eaf2ff;
+      --card:#ffffff; --ink:#22312d; --muted:#65746f;
+      --main:#26a57b; --main-dark:#13705a; --accent:#ffb84c; --accent2:#6c7df7;
+      --main2:#dcfff1; --line:#d6ebe4; --warn:#fff2c4; --soft:#f6fbf8;
+      --shadow:0 18px 40px rgba(24,91,72,.13);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; min-height:100vh;
+      background:
+        radial-gradient(circle at 10% 10%,rgba(255,207,91,.34),transparent 28%),
+        radial-gradient(circle at 88% 14%,rgba(108,125,247,.20),transparent 26%),
+        radial-gradient(circle at 50% 96%,rgba(38,165,123,.22),transparent 32%),
+        linear-gradient(135deg,var(--bg1),var(--bg2) 48%,var(--bg3));
+      font-family:"Noto Sans TC","Microsoft JhengHei",Arial,sans-serif;
+      color:var(--ink);
+    }
+    .wrap{max-width:1040px;margin:0 auto;padding:26px 16px 42px;position:relative}
+    .wrap:before,.wrap:after{content:"";position:fixed;border-radius:50%;z-index:-1;opacity:.55}
+    .wrap:before{width:160px;height:160px;background:#ffe08a;left:-50px;top:90px}
+    .wrap:after{width:220px;height:220px;background:#c9f7e5;right:-70px;bottom:20px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+    .brand{display:flex;align-items:center;gap:13px}
+    .logo{width:58px;height:58px;border-radius:20px;background:linear-gradient(135deg,var(--main),#55d69f);color:#fff;display:grid;place-items:center;font-weight:1000;box-shadow:0 10px 22px rgba(38,165,123,.26);transform:rotate(-4deg)}
+    h1{font-size:30px;margin:0;letter-spacing:.05em;color:#153f35}
+    .sub{font-size:14px;color:var(--muted);margin-top:4px}
+    .pill{font-size:13px;padding:9px 13px;border-radius:999px;background:#fff;border:1px solid #dceee8;color:#1f5d4e;font-weight:800;white-space:nowrap;box-shadow:0 8px 18px rgba(34,49,45,.06)}
+    .card{background:rgba(255,255,255,.94);backdrop-filter:blur(6px);border:1px solid rgba(214,235,228,.95);border-radius:28px;box-shadow:var(--shadow);padding:26px;margin-top:14px;position:relative;overflow:hidden}
+    .card:before{content:"";position:absolute;inset:0 0 auto 0;height:8px;background:linear-gradient(90deg,var(--main),#7bdba9,var(--accent),var(--accent2))}
+    .topline{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:15px}
+    .node{font-size:13px;color:#4d6760;font-weight:900;background:#f3fbf7;border:1px solid var(--line);border-radius:999px;padding:7px 10px}
+    .progress{height:13px;background:#e8f2ee;border-radius:999px;overflow:hidden;min-width:220px;border:1px solid #d7e9e2}
+    .bar{height:100%;background:linear-gradient(90deg,var(--main),#ffca5c);width:0;transition:.25s;border-radius:999px}
+    .scene-title{font-size:24px;font-weight:1000;margin:8px 0 12px;color:#174f42;display:flex;align-items:center;gap:8px}
+    .scene-title:before{content:"🎮";font-size:24px}
+    .scene-text{font-size:19px;line-height:1.85;background:linear-gradient(180deg,#f8fffb,#f1fbf6);border:1px solid var(--line);border-left:8px solid var(--main);border-radius:20px;padding:20px;margin:14px 0 18px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.65)}
+    .choices{display:grid;grid-template-columns:1fr;gap:13px;margin-top:12px}
+    button{font-family:inherit;cursor:pointer;border:0}
+    .choice{width:100%;text-align:left;background:#fff;border:2px solid var(--line);border-radius:22px;padding:17px 18px;font-size:17px;line-height:1.55;color:var(--ink);transition:.16s;display:flex;align-items:flex-start;gap:11px;box-shadow:0 8px 18px rgba(34,49,45,.045)}
+    .choice:hover,.choice:focus-visible{border-color:var(--main);transform:translateY(-2px) scale(1.005);box-shadow:0 14px 24px rgba(38,165,123,.15);background:#fcfffd;outline:none}
+    .choice b{display:inline-grid;place-items:center;min-width:38px;height:38px;background:linear-gradient(135deg,var(--main2),#fff6cf);color:#17614f;border-radius:14px;padding:0 8px;font-weight:1000;border:1px solid #d0f1e2}
+    .choice .ctext{flex:1}.choice .icon{font-size:24px;line-height:1.45}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+    .btn{background:linear-gradient(135deg,var(--main),#22bf8b);color:#fff;border-radius:16px;padding:12px 17px;font-weight:900;font-size:15px;box-shadow:0 10px 20px rgba(38,165,123,.18)}
+    .btn:hover{transform:translateY(-1px)}
+    .btn.secondary{background:#eef8f4;color:#31594f;box-shadow:none}
+    .btn.ghost{background:transparent;color:#31594f;border:1px solid var(--line);box-shadow:none}
+    .home{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;align-items:stretch}
+    .infoBox{background:linear-gradient(180deg,#f7fffb,#fff);border-radius:22px;padding:19px;border:1px solid var(--line)}
+    .infoBox h3{margin:0 0 8px;color:#174f42}.infoBox ul{margin:8px 0 0;padding-left:1.2em;line-height:1.9}
+    .bigStart{font-size:18px;padding:15px 23px;border-radius:18px}
+    .result-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .resultBox{border:1px solid var(--line);border-radius:20px;padding:17px;background:#fff;box-shadow:0 8px 18px rgba(34,49,45,.04)}
+    .resultBox h3{margin:0 0 10px;font-size:17px;color:#174f42}
+    .path{font-size:22px;font-weight:1000;color:#17614f;background:linear-gradient(135deg,var(--main2),#fff3c8);display:inline-block;padding:9px 13px;border-radius:14px;margin-bottom:12px;border:1px solid #cdeee0}
+    .cert{background:linear-gradient(135deg,var(--warn),#fff8df);border:1px solid #f0d891;text-align:center;font-size:20px;font-weight:1000;color:#7a5a00}
+    .mascot{font-size:58px;line-height:1;margin-bottom:8px;filter:drop-shadow(0 8px 12px rgba(34,49,45,.08))}
+    .home-title{font-size:28px;font-weight:1000;color:#174f42;margin:0 0 8px}
+    .home-sub{color:#5f716c;line-height:1.7;margin:0 0 10px}
+    .scene-image-wrap{margin:12px 0 16px;border-radius:24px;overflow:hidden;border:1px solid rgba(214,235,228,.95);background:#eef8f4;box-shadow:0 14px 30px rgba(34,49,45,.09)}
+    .scene-image{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:#eef8f4}
+    .result-hero{display:grid;grid-template-columns:1fr 320px;gap:18px;align-items:start;margin-bottom:14px}
+    .trophy-card{display:flex;justify-content:center;align-items:center;background:linear-gradient(135deg,#fff6c9,#fff);border:1px solid #f0d891;border-radius:24px;padding:14px;box-shadow:0 12px 24px rgba(122,90,0,.12)}
+    .trophy-img{width:100%;max-width:280px;border-radius:18px;display:block}
+    .trophy-note{font-size:13px;color:#7a5a00;font-weight:900;text-align:center;margin-top:8px}
+    .cert.pass{background:linear-gradient(135deg,#fff0a6,#fff9da);border-color:#e7c448}
+    .cert.retry{background:linear-gradient(135deg,#eef8f4,#fff);border-color:var(--line);color:#31594f}
+    @media(max-width:720px){
+      .home,.result-grid,.result-hero{grid-template-columns:1fr}
+      header{align-items:flex-start;flex-direction:column}.pill{white-space:normal}
+      .scene-text{font-size:17px}.choice{font-size:16px;padding:15px}h1{font-size:24px}.progress{min-width:140px}.card{padding:21px}
+      .trophy-img{max-width:320px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">3-2</div>
+        <div>
+          <h1>青春練功－不炫耀</h1>
+          <div class="sub">分支情境遊戲｜理性因應同儕性炫耀與性比較</div>
+        </div>
+      </div>
+      <div class="pill">任務挑戰</div>
+    </header>
+    <main id="app"></main>
+  </div>
+
+<script>
+const sceneImages={
+  S0:"images/scene_s0_start.png",
+  A1:"images/scene_a1_brag_to_fit_in.png",
+  A2:"images/scene_a2_brag_too_far.png",
+  AB2:"images/scene_ab2_change_topic_reflect.png",
+  AC2:"images/scene_ac2_admit_to_friend.png",
+  B1:"images/scene_b1_listen_then_questioned.png",
+  BA2:"images/scene_ba2_reject_comparison.png",
+  BB2:"images/scene_bb2_vague_answer_reflect.png",
+  BC2:"images/scene_bc2_defensive_comeback.png",
+  C1:"images/scene_c1_direct_confrontation.png",
+  CA2:"images/scene_ca2_calm_explanation.png",
+  CB2:"images/scene_cb2_argument_escalates.png",
+  CC2:"images/scene_cc2_walk_away_uncertain.png"
+};
+const trophyImage="images/trophy_success_code_7034.png";
+const passPaths=new Set(["BAA","CAA","CCA"]);
+
+const story={
+  S0:{level:1,title:"起始情境",text:"下課時，幾個同學圍在一起大聊感情史、炫耀性經驗，還笑說：『現在母胎單身也太遜了吧！』大家狂起鬨、越講越誇張，這時所有人突然轉頭盯著你看。",choices:[
+    {key:"A",label:"不甘示弱：隨便掰一點，免得被笑太菜。",next:"A1",step:"隨便掰點免被笑"},
+    {key:"B",label:"按兵不動：保持冷靜不做反應，先聽聽看就好。",next:"B1",step:"先冷靜聽聽就好"},
+    {key:"C",label:"直球對決：表達『欸，說這些很幼稚，你們超無聊的！』",next:"C1",step:"嗆幼稚你們無聊"}
+  ]},
+  A1:{level:2,title:"你也跟著吹牛",text:"為了不被笑，你也跟著吹牛畫大餅。大家聽得津津有味，但你心裡其實超心虛。",choices:[
+    {key:"A'",label:"變本加厲：繼續加碼，把自己越講越神。",next:"A2",step:"加碼把自己講神"},
+    {key:"B'",label:"轉移陣地：見好就收，趕快把話題轉開。",next:"AB2",step:"趕快把話題轉開"},
+    {key:"C'",label:"坦白從寬：私下跟麻吉承認自己剛剛在唬爛。",next:"AC2",step:"私下認剛剛唬爛"}
+  ]},
+  A2:{level:3,title:"牛皮越吹越大",text:"牛皮越吹越大，氣氛雖然很嗨，但有人開始露出『真假？』的表情。隔天甚至有人在背後酸你愛吹牛。",choices:[
+    {key:"A''",label:"硬撐到底：繼續假裝，死命維持人設。",end:"AAA",step:"死命維持假人設"},
+    {key:"B''",label:"懸崖勒馬：反省自己幹嘛把炫耀當飯吃。",end:"AAB",step:"反省幹嘛瞎炫耀"},
+    {key:"C''",label:"惱羞成怒：怪同學太八卦，千錯萬錯都不是我的錯。",end:"AAC",step:"怪同學太愛八卦"}
+  ]},
+  AB2:{level:3,title:"話題散了，但你開始反思",text:"你沒繼續掰，話題也就散了。雖然安全下莊，但你忍不住懷疑人生：我剛剛到底在怕什麼？",choices:[
+    {key:"A''",label:"莫忘初衷：告訴自己感情的重點是真心，不是來炫耀的。",end:"ABA",step:"感情真心不炫耀"},
+    {key:"B''",label:"杞人憂天：覺得下次還是得先準備好台詞才不會輸。",end:"ABB",step:"下次先備好台詞"},
+    {key:"C''",label:"隨波逐流：決定先暗中觀察，看風向跟著說。",end:"ABC",step:"看風向跟著瞎說"}
+  ]},
+  AC2:{level:3,title:"你私下坦白",text:"你私下坦白只是怕被笑才吹牛，麻吉聽完回：『你其實也知道比這個超沒意義吧？』",choices:[
+    {key:"A''",label:"坦承不諱：承認自己腦波弱，被大家影響了。",end:"ACA",step:"承認被大家影響"},
+    {key:"B''",label:"推卸責任：雙手一攤，說反正大家都在吹牛。",end:"ACB",step:"反正大家都在吹"},
+    {key:"C''",label:"執迷不悟：求麻吉幫忙想一套更神的劇本，下次繼續用。",end:"ACC",step:"想更神劇本續用"}
+  ]},
+  B1:{level:2,title:"你先保持冷靜",text:"你沒立馬跟著起鬨，只是在旁邊聽。有人突然盯著你問：『所以你到底有沒有經驗？該不會還是單身小白吧？』",choices:[
+    {key:"A'",label:"拒絕比較：『沒什麼好比，我不用經驗值來肯定自己的價值。』",next:"BA2",step:"經驗不定義價值"},
+    {key:"B'",label:"打模糊仗：『我當然有啦，只是不想講而已。』",next:"BB2",step:"不想講含糊過關"},
+    {key:"C'",label:"霸氣反嗆：『少囉唆，我有沒有，關你什麼事！』",next:"BC2",step:"少囉唆不關你事"}
+  ]},
+  BA2:{level:3,title:"你拒絕被比較定義",text:"你堅定講完後，有人笑，也有人安靜了。你發現其實不是大家都愛這種無聊的比較。",choices:[
+    {key:"A''",label:"乘勝追擊：自我增強『親密關係看的是誠意，又不是在趕火車。』",end:"BAA",step:"真誠不需趕火車"},
+    {key:"B''",label:"點到為止：不再多說表態，有人喜歡去比較無所謂。",end:"BAB",step:"別人愛比無所謂"},
+    {key:"C''",label:"教訓說教：開啟碎念模式，反過來斥責大家。",end:"BAC",step:"開啟碎念斥責風"}
+  ]},
+  BB2:{level:3,title:"含糊過關，但心裡仍受影響",text:"你用模糊方式保住了面子，大家雖然沒追問，但你心裡明白自己還是受了些影響，被帶風向了。",choices:[
+    {key:"A''",label:"自我提醒：雖感到壓力，但不靠迎合大家來換取認同。",end:"BBA",step:"不迎合換取認同"},
+    {key:"B''",label:"含糊過關：覺得這招超好用，以後被問都裝傻帶過。",end:"BBB",step:"以後被問都裝傻"},
+    {key:"C''",label:"庸人自擾：開始焦慮，想著是不是趕快脫單、追進度。",end:"BBC",step:"開始焦慮拼脫單"}
+  ]},
+  BC2:{level:3,title:"反嗆讓氣氛對立",text:"你直接嗆爆，對方也回頂你，氣氛瞬間對立。你雖然表達生氣情緒，沒被影響，但也沒把自己的想法說清楚。",choices:[
+    {key:"A''",label:"亡羊補牢：之後找好時機，好好講清楚自己的想法。",end:"BCA",step:"找時機講清想法"},
+    {key:"B''",label:"逞強好勝：覺得只要吵架沒有輸就好，其他都不重要。",end:"BCB",step:"吵架沒有輸就好"},
+    {key:"C''",label:"走為上策：以後看到這群人就閃，眼不見為淨。",end:"BCC",step:"看到這群人就閃"}
+  ]},
+  C1:{level:2,title:"你直接指出他們很幼稚",text:"你直接說他們幼稚、無聊，幾個人秒變臉，反酸你：『你是不是眼紅我們經驗豐富，才在那邊酸啊？』",choices:[
+    {key:"A'",label:"以柔克剛：語氣淡定『拿性經驗來炫耀很瞎欸，不值得我羨慕。』",next:"CA2",step:"拿性炫耀超瞎的"},
+    {key:"B'",label:"奉陪到底：找人來助陣，死都要嗆贏對方。",next:"CB2",step:"找人助陣死要贏"},
+    {key:"C'",label:"多說無益：懶得跟他們廢話，直接轉身走人。",next:"CC2",step:"懶得廢話轉身走"}
+  ]},
+  CA2:{level:3,title:"你把立場講清楚",text:"你把話講明白後，雖然有人還在嘴硬，但也沒人敢再逼問。你成功把風向從『比經驗』帶回『做自己』。",choices:[
+    {key:"A''",label:"堅定立場：我羨慕的是理性思考，不是無腦跟風比經驗。",end:"CAA",step:"做自己不盲跟風"},
+    {key:"B''",label:"怕被排擠：下次識相點比較好，話不必講那麼清楚。",end:"CAB",step:"話不必講太清楚"},
+    {key:"C''",label:"指桑罵槐：公開侮辱嘴硬愛比較的人，請大家來公審。",end:"CAC",step:"公開公審愛比者"}
+  ]},
+  CB2:{level:3,title:"互嗆讓焦點消失",text:"你們越吵越火爆，最後大家只記得你們在互嗆，根本沒人管『炫耀、比較性經驗』這件事到底多荒謬。",choices:[
+    {key:"A''",label:"事後反省：理性思考表達立場，不能只靠暴走嗆聲。",end:"CBA",step:"表達立場不靠嗆"},
+    {key:"B''",label:"氣勢為先：只要能聲勢壓過對方，我贏得面子就好。",end:"CBB",step:"聲勢壓過贏面子"},
+    {key:"C''",label:"以毒攻毒：大家這麼看重性經驗，那下次換我來吹噓。",end:"CBC",step:"下次換我來吹噓"}
+  ]},
+  CC2:{level:3,title:"你離開現場，但仍感到不安",text:"雖然你毅然避開了同學性經驗比較壓力，但又覺得自己剛才好像有點龜縮、擔心錯過了大家談論的話題。",choices:[
+    {key:"A''",label:"豁然開朗：別人的經驗進度又不是我的 KPI，不用著急！",end:"CCA",step:"進度不是我 KPI"},
+    {key:"B''",label:"自尋煩惱：越想越焦慮，懷疑自己是不是真的太落後。",end:"CCB",step:"焦慮落後好煩惱"},
+    {key:"C''",label:"隨波逐流：下次先看大家怎麼說，可稍作配合風向。",end:"CCC",step:"配合風向跟著說"}
+  ]}
+};
+
+const feedback={
+  AAA:["吹牛時感到心虛，代表心裡很清醒，知道比較是沒意義，這份理性的微覺察是很好的開端！","為了假人設說謊只會讓自己更心累。試著放下比較壓力，不需要靠虛假的經驗值來換取同學的認同與讚賞。","重新接受關卡挑戰，邁向成功"],
+  AAB:["雖然一開始跟風吹牛，但你最後成功懸崖勒馬，看穿『性炫耀』超無聊，展現了理性思考力！","下次遇到大家起鬨時，可以試著一開始就冷靜按兵不動，拒絕加入這種無意義的賽局，做自己會更輕鬆喔！","重新接受關卡挑戰，邁向成功"],
+  AAC:["一開始雖然面子掛不住而跟著吹牛，但心裡心虛與不痛快，正代表理智在提醒你這不值得驕傲！","甩鍋給八卦同學並不能真正逃避內心壓力。試著學習調適同儕比較的焦慮，誠實做自己才不需要辛苦裝神。","重新接受關卡挑戰，邁向成功"],
+  ABA:["吹牛後機警地見好就收、轉開話題，最後看透感情重點是『真心』而非『炫耀』，有自己主見！","轉移話題成功安全下莊很聰明，但如果一開始就能挺住同儕壓力、果斷拒絕跟風瞎掰，你的防禦力會更無敵！","重新接受關卡挑戰，邁向成功"],
+  ABB:["展現社交手腕，用轉移話題的方式幫自己解圍，成功阻斷了當下被大家盯著逼問的尷尬壓力。","還在焦慮預備下次的台詞嗎？快放下輸贏吧！性經驗本來就不是感情的 KPI，不比這場無聊比賽才是真贏家。","重新接受關卡挑戰，邁向成功"],
+  ABC:["發現苗頭不對時能及時轉開話題，暫時讓自己遠離風暴中心，保護了自己，值得肯定。","盲目看風向、跟著瞎說太被動了！多鍛鍊理性思考，認清單身小白並不遜，別再被無聊的性炫耀話題牽著走。","重新接受關卡挑戰，邁向成功"],
+  ACA:["雖然當下忍不住吹牛，但事後你坦白承認自己當時『腦波弱』，這份坦率與自我覺察超帥氣！","既然看清了這種比較毫無意義，下次在起鬨的第一時間，就試著堅定拒絕跟風，勇敢坦白自己的真實狀態。","重新接受關卡挑戰，邁向成功"],
+  ACB:["能卸下面子對好朋友說真心話，坦承剛剛是在唬爛，代表你理智上完全明白炫耀真的很空虛。","用『大家都在吹牛』當藉口無法真正調適內心焦慮。要試著從心底肯定自己的價值，拒絕被同儕壓力牽著走。","重新接受關卡挑戰，邁向成功"],
+  ACC:["至少你說了實話，大腦很清醒自己剛剛只是為了面子在硬撐，這份誠實是做出改變的好起點。","預備更神的劇本只是給自己挖坑！快放下性炫耀的包袱，學會理性思考，才能真正拒絕下一次的起鬨。","重新接受關卡挑戰，邁向成功"],
+  BAA:["能堅定喊出『我不靠經驗值定義價值』，完美調適壓力、神級拒絕因應，內心強大直接封神！","表現簡直滿分！繼續維持這份不被帶風向的無敵自信，用最真誠的態度去經營屬於你自己的健康親密關係。","恭喜通關，邁向成功"],
+  BAB:["勇敢表達立場後便大方點到為止，笑看同學幼稚的比較，這種 EQ 展現了超強的壓力調適能力！","你的表現成熟！如果能在內心深處更加肯定自己這份理性的防禦力，未來面對任何同儕壓力都會更游刃有餘。","重新接受關卡挑戰，邁向成功"],
+  BAC:["觀念正確，完全不被別人的經驗值綁架，能在大家圍剿時勇敢站出來，拒絕對方的單身羞辱。","雖然觀念很對，但開啟說教碎念模式容易引戰。試著溫柔堅定表達立場後直接句點對方，做自己是最強的回擊。","重新接受關卡挑戰，邁向成功"],
+  BBA:["雖然用模糊招式保住面子，但你最後穩住陣腳，提醒自己不靠迎合來換取認同，調適得很棒！","下次可以更抬頭挺胸！相信單身小白一點都不遜，大方拒絕對方的窺探，理性捍衛自己的感情隱私與節奏。","重新接受關卡挑戰，邁向成功"],
+  BBB:["保持冷靜，用含糊裝傻當作防禦盾牌成功阻斷了起鬨，安全下莊也是種厲害的拒絕策略。","裝傻雖然好用，但內心可能還是會糾結。建議多鍛鍊理性思考，打從心底拒絕性炫耀，壓力才會真正消失。","重新接受關卡挑戰，邁向成功"],
+  BBC:["面對嘲笑挑釁能沉著裝傻，理智上沒有跟著瞎掰吹牛，第一步防禦其實做得很好。","為了面子急著『拼進度』就中計了！理性思考一下：感情不是快就贏，別讓炫耀來給自己製造無謂的壓力。","重新接受關卡挑戰，邁向成功"],
+  BCA:["雖然一度火爆反嗆，但事後懂得『亡羊補牢』，找好時機理性講清楚自己的想法，EQ 調適有進步！","當下若能用淡定冷酷的語氣直接句點對方，會比火爆互嗆更有高度，也能更帥氣地拒絕對方的無聊比較壓力。","重新接受關卡挑戰，邁向成功"],
+  BCB:["面對無聊嘲諷，有勇氣霸氣反嗆，沒讓對方輕易把你當軟柿子踩，展現了強烈的自我防衛意識！","吵架贏了不等於贏得尊重，反而模糊了焦點。試著冷靜、理性地回擊『比這個很幼稚』，回應會更有力量。","重新接受關卡挑戰，邁向成功"],
+  BCC:["霸氣開嗆後，採取『眼不見為淨』主動閃人，成功在物理上阻斷了這個比較壓力的有毒環境。","閃躲雖然能避難，但別在心裡偷偷受傷。要學會理性思考，不把同學的嘴砲當作評估自己感情進度的 KPI。","重新接受關卡挑戰，邁向成功"],
+  CAA:["連續兩次清醒回擊！大方回應『拿這個炫耀很瞎』，完美做自己、不盲跟風，理性思考力拉滿！","毫無破綻的滿分操作！請繼續保持這份不跟風的底氣，你就是這群愛比較同儕中，最清醒、最帥氣的獨立思考者。","恭喜通關，邁向成功"],
+  CAB:["一針見血戳破『拿性經驗炫耀很瞎』的盲點，用理性思考力直球擊碎同儕壓力，表現相當帥氣！","既然一開始講得那麼棒，下次就不必因為害怕被排擠而縮回去，堅定自我價值的立場，不需委屈妥協。","重新接受關卡挑戰，邁向成功"],
+  CAC:["你非常理智，看穿性炫耀行為的荒謬，拒絕被比較框架給綁架，展現出很好的批判思考能力。","拉大家公審只會把戰火鬧大，模糊了理性的初衷。堅定做好自己、冷眼笑看他們吹牛，才是最高端的拒絕。","重新接受關卡挑戰，邁向成功"],
+  CBA:["互嗆後事後反省，明白理性表達立場不能光靠暴走嗆聲，這份自覺與調適力真的很難得！","第一時間若能克制怒火，用淡定的冷笑或幽默神回絕，就能在維持面子的同時，精準地戳破對方的幼稚炫耀。","重新接受關卡挑戰，邁向成功"],
+  CBB:["勇敢挑明對方幼稚，面對反酸也不怕對幹、找人助陣，氣勢挺住壓力，沒讓自己落入下風。","拼聲勢互嗆只會讓主題歪樓。練習調適情緒，冷靜地回一句『你們比這個真的很瞎』，用理性力量精準回應。","重新接受關卡挑戰，邁向成功"],
+  CBC:["勇於站出來反對同儕的幼稚炫耀，代表你理智上其實很清楚，這種性經驗比較的行為非常荒謬。","下次換你吹噓就本末倒置了！別因為一時氣憤就跟著同流合污，理性思考感情真心，堅定守住做自己的價值。","重新接受關卡挑戰，邁向成功"],
+  CCA:["瀟灑轉身遠離戰場，堅持『別人的進度不是我的 KPI』，這份超強的壓力調適能力，真是拒絕神作！","毫無破綻的完美因應！請繼續保持這種豁達、理性的心態，堅信單身一點都不遜，自己的感情節奏自己做主。","恭喜通關，邁向成功"],
+  CCB:["敢在第一時間直言反駁並轉身離開，物理上成功隔絕了當下充滿性比較與起鬨壓力的暴風圈。","轉身離開後千萬別在心裡偷偷焦慮！每個人都有自己的親密關係時區，別被同學的嘴砲帶風向。","重新接受關卡挑戰，邁向成功"],
+  CCC:["面對同學的圍剿，懂得轉身走人、拒絕莫名的單身羞辱，這第一步的避險做得很對。","走開後又想回頭配合風向太可惜了！請鍛鍊內心的堅定拒絕力，相信自己的節奏，各式性炫耀都不值一聽。","重新接受關卡挑戰，邁向成功"]
+};
+
+let current="home";
+let path=[];
+let steps=[];
+const app=document.getElementById("app");
+function displayKey(k){return String(k).replace(/[’']/g,"")}
+function displayRouteFromEnd(endKey){return String(endKey).replace(/^END_/,"").split("").join(" > ")}
+function resetState(){path=[];steps=[];current="home"}
+function startChallenge(){resetState();go("S0")}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
+function renderHome(){
+  resetState();
+  app.innerHTML=`
+    <section class="card home">
+      <div>
+        <div class="mascot">🛡️</div>
+        <div class="home-title">青春練功－不炫耀｜任務啟動</div>
+        <p class="home-sub">你將進入一個同學討論感情與性經驗的情境。面對起鬨、比較與追問時，每一步選擇都會影響最後結果。</p>
+        <div class="scene-text">任務目標：理性因應同儕性炫耀與性比較。</div>
+        <div class="actions"><button class="btn bigStart" onclick="startChallenge()">開始挑戰</button></div>
+      </div>
+      <div class="infoBox">
+        <h3>遊戲說明</h3>
+        <ul>
+          <li>遊戲共有三個情境階段，每一階段都要做出一個選擇。</li>
+          <li>你的選擇會影響後續情境，最後形成不同的行動路徑與結果。</li>
+          <li>完成三次選擇後，系統會整理你的因應行動，並提供回饋與建議。</li>
+          <li>部分路徑可以成功通關；未通關時，可重新挑戰並嘗試不同選擇。</li>
+        </ul>
+      </div>
+    </section>`;
+}
+function go(id){current=id;renderNode(id)}
+function choose(nodeId,index){
+  const ch=story[nodeId].choices[index];
+  path.push(displayKey(ch.key));
+  steps.push(ch.step);
+  if(ch.next){go(ch.next)}else{renderEnd(ch.end)}
+}
+function renderNode(id){
+  const n=story[id];
+  const percent=n.level===1?15:n.level===2?50:82;
+  app.innerHTML=`
+    <section class="card">
+      <div class="topline"><div class="node">任務進度｜第 ${n.level} 步</div><div class="progress"><div class="bar" style="width:${percent}%"></div></div></div>
+      <div class="scene-title">${esc(n.title)}</div>
+      <div class="scene-image-wrap"><img class="scene-image" src="${sceneImages[id]}" alt="${esc(n.title)}"></div>
+      <div class="scene-text">${esc(n.text)}</div>
+      <div class="choices">
+        ${n.choices.map((c,i)=>`<button class="choice" onclick="choose('${id}',${i})"><b>${String.fromCharCode(65+i)}</b><span class="icon">${["💬","🧠","🛡️"][i]}</span><span class="ctext">${esc(c.label)}</span></button>`).join("")}
+      </div>
+      <div class="actions"><button class="btn secondary" onclick="renderHome()">回首頁</button><button class="btn ghost" onclick="startChallenge()">重新開始</button></div>
+    </section>`;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function renderEnd(endKey){
+  const fb=feedback[endKey]||["","",""];
+  const route=displayRouteFromEnd(endKey);
+  const actionList=steps.slice(-3).map((s,i)=>`${i+1}. ${esc(s)}`).join("<br>");
+  const isPass=passPaths.has(endKey);
+  const trophyBlock=isPass?`
+    <div class="trophy-card">
+      <div>
+        <img class="trophy-img" src="${trophyImage}" alt="成功通關獎盃，青春密碼 7034">
+        <div class="trophy-note">通關密碼：7034</div>
+      </div>
+    </div>`:"";
+  app.innerHTML=`
+    <section class="card">
+      <div class="topline"><div class="node">挑戰完成</div><div class="progress"><div class="bar" style="width:100%"></div></div></div>
+      <div class="scene-title">你的挑戰結果</div>
+      <div class="result-hero">
+        <div>
+          <div class="path">${esc(route)}</div>
+          <div class="result-grid">
+            <div class="resultBox"><h3>① 你的因應行動</h3><p>${actionList}</p></div>
+            <div class="resultBox"><h3>② 你表現好的地方</h3><p>${esc(fb[0])}</p></div>
+            <div class="resultBox"><h3>③ 你可以這樣做會更棒</h3><p>${esc(fb[1])}</p></div>
+            <div class="resultBox cert ${isPass?"pass":"retry"}"><h3>④ 關卡認證</h3><p>${esc(fb[2])}</p></div>
+          </div>
+        </div>
+        ${trophyBlock}
+      </div>
+      <div class="actions"><button class="btn" onclick="startChallenge()">再挑戰一次</button><button class="btn secondary" onclick="renderHome()">回首頁</button></div>
+    </section>`;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+renderHome();
+</script>
+</body>
+</html>
