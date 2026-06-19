@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#26a57b" />
-  <title>青春練功－不炫耀｜分支情境遊戲</title>
+  <title>3-2 青春練功－不炫耀｜分支情境遊戲</title>
   <style>
     :root{
       --bg1:#fff7d9; --bg2:#e9fff4; --bg3:#eaf2ff;
@@ -88,7 +88,7 @@
       <div class="brand">
         <div class="logo">3-2</div>
         <div>
-          <h1>青春練功－不炫耀</h1>
+          <h1>3-2 青春練功－不炫耀</h1>
           <div class="sub">分支情境遊戲｜理性因應同儕性炫耀與性比較</div>
         </div>
       </div>
@@ -201,7 +201,7 @@ const feedback={
   BBB:["保持冷靜，用含糊裝傻當作防禦盾牌成功阻斷了起鬨，安全下莊也是種厲害的拒絕策略。","裝傻雖然好用，但內心可能還是會糾結。建議多鍛鍊理性思考，打從心底拒絕性炫耀，壓力才會真正消失。","重新接受關卡挑戰，邁向成功"],
   BBC:["面對嘲笑挑釁能沉著裝傻，理智上沒有跟著瞎掰吹牛，第一步防禦其實做得很好。","為了面子急著『拼進度』就中計了！理性思考一下：感情不是快就贏，別讓炫耀來給自己製造無謂的壓力。","重新接受關卡挑戰，邁向成功"],
   BCA:["雖然一度火爆反嗆，但事後懂得『亡羊補牢』，找好時機理性講清楚自己的想法，EQ 調適有進步！","當下若能用淡定冷酷的語氣直接句點對方，會比火爆互嗆更有高度，也能更帥氣地拒絕對方的無聊比較壓力。","重新接受關卡挑戰，邁向成功"],
-  BCB:["面對無聊嘲諷，有勇氣霸氣反嗆，沒讓對方輕易把你當軟柿子踩，展現了強烈的自我防衛意識！","吵架贏了不等於贏得尊重，反而模糊了焦點。試著冷靜、理性地回擊『比這個很幼稚』，回應會更有力量。","重新接受關卡挑戰，邁向成功"],
+  BCB:["面對無聊嘲諷，有勇氣霸氣反嗆，沒讓對方輕易把你當軟柿子踩，展現了強烈的自我防衛意識！","吵架贏了不等於贏得尊重，反而模糊了焦點。試著冷靜、理性地回一句『比這個很幼稚』，回應會更有力量。","重新接受關卡挑戰，邁向成功"],
   BCC:["霸氣開嗆後，採取『眼不見為淨』主動閃人，成功在物理上阻斷了這個比較壓力的有毒環境。","閃躲雖然能避難，但別在心裡偷偷受傷。要學會理性思考，不把同學的嘴砲當作評估自己感情進度的 KPI。","重新接受關卡挑戰，邁向成功"],
   CAA:["連續兩次清醒回擊！大方回應『拿這個炫耀很瞎』，完美做自己、不盲跟風，理性思考力拉滿！","毫無破綻的滿分操作！請繼續保持這份不跟風的底氣，你就是這群愛比較同儕中，最清醒、最帥氣的獨立思考者。","恭喜通關，邁向成功"],
   CAB:["一針見血戳破『拿性經驗炫耀很瞎』的盲點，用理性思考力直球擊碎同儕壓力，表現相當帥氣！","既然一開始講得那麼棒，下次就不必因為害怕被排擠而縮回去，堅定自我價值的立場，不需委屈妥協。","重新接受關卡挑戰，邁向成功"],
@@ -229,7 +229,7 @@ function renderHome(){
     <section class="card home">
       <div>
         <div class="mascot">🛡️</div>
-        <div class="home-title">青春練功－不炫耀｜任務啟動</div>
+        <div class="home-title">3-2 青春練功－不炫耀｜任務啟動</div>
         <p class="home-sub">你將進入一個同學討論感情與性經驗的情境。面對起鬨、比較與追問時，每一步選擇都會影響最後結果。</p>
         <div class="scene-text">任務目標：理性因應同儕性炫耀與性比較。</div>
         <div class="actions"><button class="btn bigStart" onclick="startChallenge()">開始挑戰</button></div>
@@ -257,7 +257,7 @@ function renderNode(id){
   const percent=n.level===1?15:n.level===2?50:82;
   app.innerHTML=`
     <section class="card">
-      <div class="topline"><div class="node">任務進度｜第 ${n.level} 步</div><div class="progress"><div class="bar" style="width:${percent}%"></div></div></div>
+      <div class="topline"><div class="node">任務進度｜第 ${n.level} 回合</div><div class="progress"><div class="bar" style="width:${percent}%"></div></div></div>
       <div class="scene-title">${esc(n.title)}</div>
       <div class="scene-image-wrap"><img class="scene-image" src="${sceneImages[id]}" alt="${esc(n.title)}"></div>
       <div class="scene-text">${esc(n.text)}</div>
