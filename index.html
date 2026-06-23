@@ -74,6 +74,7 @@
     .trophy-note{font-size:13px;color:#7a5a00;font-weight:900;text-align:center;margin-top:8px}
     .cert.pass{background:linear-gradient(135deg,#fff0a6,#fff9da);border-color:#e7c448}
     .cert.retry{background:linear-gradient(135deg,#eef8f4,#fff);border-color:var(--line);color:#31594f}
+    .cert-stamp{margin:.35em 0 0;font-size:1.05em;font-weight:1000;color:#7a5a00}
     @media(max-width:720px){
       .home,.result-grid,.result-hero{grid-template-columns:1fr}
       header{align-items:flex-start;flex-direction:column}.pill{white-space:normal}
@@ -291,7 +292,7 @@ function renderEnd(endKey){
             <div class="resultBox"><h3>① 你的因應行動</h3><p>${actionList}</p></div>
             <div class="resultBox"><h3>② 你表現好的地方</h3><p>${esc(fb[0])}</p></div>
             <div class="resultBox"><h3>③ 你可以這樣做會更棒</h3><p>${esc(fb[1])}</p></div>
-            <div class="resultBox cert ${isPass?"pass":"retry"}"><h3>④ 關卡認證</h3><p>${esc(fb[2])}</p></div>
+            <div class="resultBox cert ${isPass?"pass":"retry"}"><h3>④ 關卡認證</h3><p>${esc(fb[2])}</p>${isPass ? '<p class="cert-stamp">【請你相信】</p>' : ""}</div>
           </div>
         </div>
         ${trophyBlock}
