@@ -81,7 +81,38 @@
       .scene-text{font-size:17px}.choice{font-size:16px;padding:15px}h1{font-size:24px}.progress{min-width:140px}.card{padding:21px}
       .trophy-img{max-width:320px}
     }
-  </style>
+  
+/* 與月經教育新版一致的紙感拼貼視覺：保留原始遊戲場景圖片 */
+:root{--bg1:#f4e3c6;--bg2:#fdf1df;--bg3:#e1efe8;--card:#fff9ee;--ink:#2d2924;--muted:#665e55;--main:#21876c;--main-dark:#15634e;--accent:#edb957;--line:#5f675b;--shadow:8px 10px 0 rgba(43,35,27,.13)}
+body{background:repeating-linear-gradient(0deg,rgba(63,50,36,.024) 0 1px,transparent 1px 6px),linear-gradient(135deg,var(--bg1),var(--bg2) 48%,var(--bg3))}
+.card{background:var(--card);border:3px solid #302c28;border-radius:19px;box-shadow:var(--shadow);backdrop-filter:none}
+.card:before{background:linear-gradient(90deg,#e5b852,#df8061,#6c9db3,#21876c);height:10px}
+.logo{border:2px solid #302c28;border-radius:14px;box-shadow:4px 5px 0 rgba(43,35,27,.12)}
+.pill,.node{border:2px solid #302c28;border-radius:12px;background:#fff8eb}
+.infoBox,.scene-text,.resultBox,.scene-image-wrap,.trophy-card{border:2px solid #302c28;border-radius:16px;box-shadow:4px 5px 0 rgba(43,35,27,.09)}
+.scene-text{background:#fff7e5;border-left:7px solid #21876c}
+.choice{border:2px solid #766f61;background:#fffefa;border-radius:15px;box-shadow:3px 4px 0 rgba(43,35,27,.08);min-height:64px}
+.choice:hover,.choice:focus-visible{border-color:#21876c;background:#f0fff7}
+.choice .ctext{display:flex;flex-direction:column;gap:4px}
+.choice-tag{display:inline-flex;align-self:flex-start;padding:3px 9px;background:#fff0c6;color:#5f3c22;border:1px solid #987747;border-radius:8px;font-size:14px;font-weight:900;letter-spacing:.07em}
+.choice-detail{display:block;line-height:1.65}
+.choice b{background:#e5f5e9;border:1px solid #302c28;border-radius:9px}
+.btn{min-height:46px;border:2px solid #302c28;border-radius:12px;box-shadow:3px 4px 0 rgba(43,35,27,.10)}
+.btn.secondary{background:#f5ebd6}.btn.ghost{background:#fffefa;border:2px solid #302c28}
+.btn:disabled{opacity:.42;cursor:not-allowed;box-shadow:none}
+.btn:focus-visible,.choice:focus-visible{outline:3px solid #9c7ad5;outline-offset:3px}
+.learning-note{padding:10px 14px;margin:5px 0 14px;border-left:5px solid #d7a04b;background:#fff0d0;border-radius:8px;color:#65503a;font-weight:800}
+@media(max-width:720px){
+ .wrap{padding:12px 10px 28px}.card{padding:17px}
+ .actions{display:grid;grid-template-columns:1fr;gap:10px}.actions .btn{width:100%}
+ .choice{padding:12px;gap:9px}.choice .icon{font-size:20px}
+ .choice b{min-width:32px;height:32px}.choice-detail{font-size:16px}
+ .result-grid{grid-template-columns:1fr}.scene-text{font-size:17px;padding:15px}
+ .result-hero{grid-template-columns:1fr}.scene-title{font-size:21px}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+</style>
 </head>
 <body>
   <div class="wrap">
@@ -90,7 +121,7 @@
         <div class="logo">3-2</div>
         <div>
           <h1>3-2 青春練功－不炫耀</h1>
-          <div class="sub">分支情境遊戲｜理性因應同儕性炫耀與性比較</div>
+          <div class="sub">技能學習｜同儕壓力判斷、表達立場與情境練習</div>
         </div>
       </div>
       <div class="pill">任務挑戰</div>
@@ -215,17 +246,57 @@ const feedback={
   CCC:["面對同學的圍剿，懂得轉身走人、拒絕莫名的單身羞辱，這第一步的避險做得很對。","走開後又想回頭配合風向太可惜了！請鍛鍊內心的堅定拒絕力，相信自己的節奏，各式性炫耀都不值一聽。","重新接受關卡挑戰，邁向成功"]
 };
 
+const STORAGE_KEY="youthNoBragSkillV3";
 let current="home";
 let path=[];
 let steps=[];
+let nodeHistory=[];
+let endKeySaved=null;
 const app=document.getElementById("app");
 function displayKey(k){return String(k).replace(/[’']/g,"")}
 function displayRouteFromEnd(endKey){return String(endKey).replace(/^END_/,"").split("").join(" > ")}
-function resetState(){path=[];steps=[];current="home"}
+function loadProgress(){
+  try{
+    const v=JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if(v && (story[v.current] || (v.current==="end" && feedback[v.endKey])) &&
+        Array.isArray(v.path) && Array.isArray(v.steps) && Array.isArray(v.nodeHistory)) return v;
+  }catch(e){}
+  return null;
+}
+function saveProgress(){
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify({current,path,steps,nodeHistory,endKey:endKeySaved}));}catch(e){}
+}
+function resetState(){
+  path=[];steps=[];nodeHistory=[];current="home";endKeySaved=null;
+  try{localStorage.removeItem(STORAGE_KEY);}catch(e){}
+}
 function startChallenge(){resetState();go("S0")}
+function resumeChallenge(){
+  const saved=loadProgress();
+  if(!saved){startChallenge();return;}
+  current=saved.current;path=[...saved.path];steps=[...saved.steps];nodeHistory=[...saved.nodeHistory];endKeySaved=saved.endKey||null;
+  if(current==="end") renderEnd(endKeySaved);
+  else renderNode(current);
+}
+function goBack(){
+  if(!nodeHistory.length)return;
+  const previous=nodeHistory.pop();
+  if(path.length)path.pop();
+  if(steps.length)steps.pop();
+  current=previous;endKeySaved=null;
+  saveProgress();renderNode(previous);
+}
+function restartChallenge(requireConfirm=true){
+  if(requireConfirm && !confirm("確定清除這次挑戰紀錄並重新開始嗎？"))return;
+  resetState();window.location.reload();
+}
+function returnHome(){
+  if(confirm("返回首頁會清除目前挑戰進度，確定嗎？"))renderHome();
+}
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
-function renderHome(){
-  resetState();
+function renderHome(preserveProgress=false){
+  if(!preserveProgress) resetState();
+  const canResume=!!loadProgress();
   app.innerHTML=`
     <section class="card home">
       <div>
@@ -233,20 +304,22 @@ function renderHome(){
         <div class="home-title">3-2 青春練功－不炫耀｜任務啟動</div>
         <p class="home-sub">你將進入一個同學討論感情與性經驗的情境。面對起鬨、比較與追問時，每一步選擇都會影響最後結果。</p>
         <div class="scene-text">任務目標：理性因應同儕性炫耀與性比較。</div>
-        <div class="actions"><button class="btn bigStart" onclick="startChallenge()">開始挑戰</button></div>
+        <div class="actions"><button class="btn bigStart" onclick="startChallenge()">開始新挑戰</button>${canResume ? '<button class="btn secondary" onclick="resumeChallenge()">繼續上次挑戰</button>' : ''}</div>
       </div>
       <div class="infoBox">
         <h3>遊戲說明</h3>
         <ul>
           <li>遊戲共有三個情境階段，每一階段都要做出一個選擇。</li>
           <li>你的選擇會影響後續情境，最後形成不同的行動路徑與結果。</li>
-          <li>完成三次選擇後，系統會整理你的因應行動，並提供回饋與建議。</li>
+          <li>每個選項先顯示四字行為標籤，幫助你辨認採取的策略。</li>
+          <li>完成三次選擇後，系統會整理因應行動，提供個別回饋與建議。</li>
+          <li>可返回上一個情境重新選擇；重新整理後也能繼續尚未完成的挑戰。</li>
           <li>部分路徑可以成功通關；未通關時，可重新挑戰並嘗試不同選擇。</li>
         </ul>
       </div>
     </section>`;
 }
-function go(id){current=id;renderNode(id)}
+function go(id){if(story[current])nodeHistory.push(current);current=id;endKeySaved=null;saveProgress();renderNode(id)}
 function choose(nodeId,index){
   const ch=story[nodeId].choices[index];
   path.push(displayKey(ch.key));
@@ -259,17 +332,19 @@ function renderNode(id){
   app.innerHTML=`
     <section class="card">
       <div class="topline"><div class="node">任務進度｜第 ${n.level} 回合</div><div class="progress"><div class="bar" style="width:${percent}%"></div></div></div>
-      <div class="scene-title">${esc(n.title)}</div>
+      <div class="scene-title">${esc(n.title)}</div><div class="learning-note">行動策略辨識｜觀察情境差異，選出你認為合適的回應方式。</div>
       <div class="scene-image-wrap"><img class="scene-image" src="${sceneImages[id]}" alt="${esc(n.title)}"></div>
       <div class="scene-text">${esc(n.text)}</div>
       <div class="choices">
-        ${n.choices.map((c,i)=>`<button class="choice" onclick="choose('${id}',${i})"><b>${String.fromCharCode(65+i)}</b><span class="icon">${["💬","🧠","🛡️"][i]}</span><span class="ctext">${esc(c.label)}</span></button>`).join("")}
+        ${n.choices.map((c,i)=>`<button class="choice" onclick="choose('${id}',${i})"><b>${String.fromCharCode(65+i)}</b><span class="icon">${["💬","🧠","🛡️"][i]}</span><span class="ctext"><span class="choice-tag">${esc(c.label.split("：")[0])}</span><span class="choice-detail">${esc(c.label.split("：").slice(1).join("："))}</span></span></button>`).join("")}
       </div>
-      <div class="actions"><button class="btn secondary" onclick="renderHome()">回首頁</button><button class="btn ghost" onclick="startChallenge()">重新開始</button></div>
+      <div class="actions"><button class="btn secondary" onclick="goBack()" ${!nodeHistory.length?'disabled':''}>上一個情境</button><button class="btn ghost" onclick="returnHome()">回首頁</button><button class="btn ghost" onclick="restartChallenge()">重新開始</button></div>
     </section>`;
   window.scrollTo({top:0,behavior:"smooth"});
 }
 function renderEnd(endKey){
+  if(current!=="end" && story[current])nodeHistory.push(current);
+  current="end";endKeySaved=endKey;saveProgress();
   const fb=feedback[endKey]||["","",""];
   const route=displayRouteFromEnd(endKey);
   const actionList=steps.slice(-3).map((s,i)=>`${i+1}. ${esc(s)}`).join("<br>");
@@ -284,7 +359,7 @@ function renderEnd(endKey){
   app.innerHTML=`
     <section class="card">
       <div class="topline"><div class="node">挑戰完成</div><div class="progress"><div class="bar" style="width:100%"></div></div></div>
-      <div class="scene-title">你的挑戰結果</div>
+      <div class="scene-title">你的挑戰結果</div><p class="learning-note">學習統整｜回顧行動、肯定有效策略，再思考下次可以怎麼調整。</p>
       <div class="result-hero">
         <div>
           <div class="path">${esc(route)}</div>
@@ -297,11 +372,11 @@ function renderEnd(endKey){
         </div>
         ${trophyBlock}
       </div>
-      <div class="actions"><button class="btn" onclick="startChallenge()">再挑戰一次</button><button class="btn secondary" onclick="renderHome()">回首頁</button></div>
+      <div class="actions"><button class="btn secondary" onclick="goBack()">返回上一個情境</button><button class="btn" onclick="restartChallenge(false)">再挑戰一次</button><button class="btn ghost" onclick="returnHome()">回首頁</button></div>
     </section>`;
   window.scrollTo({top:0,behavior:"smooth"});
 }
-renderHome();
+renderHome(true);
 </script>
 </body>
 </html>
